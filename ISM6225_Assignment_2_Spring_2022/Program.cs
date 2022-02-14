@@ -8,6 +8,7 @@ WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ISM6225_Assignment_2_Spring_2022
 {
@@ -30,14 +31,14 @@ namespace ISM6225_Assignment_2_Spring_2022
             string paragraph = "Bob hit a ball, the hit BALL flew far after it was hit.";
             string[] banned = { "hit" };
             string commonWord = MostCommonWord(paragraph, banned);
-            Console.WriteLine("Most frequent word is {0}:", commonWord);
+            Console.WriteLine("Most frequent word is: {0}", commonWord);
             Console.WriteLine();
 
             //Question 3:
             Console.WriteLine("Question 3");
             int[] arr1 = { 2, 2, 3, 4 };
             int lucky_number = FindLucky(arr1);
-            Console.WriteLine("The Lucky number in the given array is {0}", lucky_number);
+            Console.WriteLine("The Lucky number in the given array is: {0}", lucky_number);
             Console.WriteLine();
 
             //Question 4:
@@ -58,6 +59,7 @@ namespace ISM6225_Assignment_2_Spring_2022
             {
                 Console.Write(part[i] + "\t");
             }
+            Console.WriteLine();
             Console.WriteLine();
 
             //Question 6:
@@ -103,13 +105,13 @@ namespace ISM6225_Assignment_2_Spring_2022
 
             //Question 10:
             Console.WriteLine("Question 10");
-            string word1  = "horse";
+            string word1 = "horse";
             string word2 = "ros";
-            int minLen = MinDistance( word1,  word2);
+            int minLen = MinDistance(word1, word2);
             Console.WriteLine("Minimum number of operations required are {0}", minLen);
             Console.WriteLine();
         }
-    
+
 
         /*
         
@@ -133,13 +135,75 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //Write your Code here.
-                return -1;
+
+                //declaring variable for storing index location
+                int index_loc;
+
+                //declaring variable to length of the array
+                int high = nums.Length - 1;
+
+
+                //declaring variable to store lowest value of the array
+                int low = 0;
+
+                //finding the middle index using highest index and lowest index of the array
+                int mid = (high + low) / 2;
+
+                //case 1 - when the array contains target variable
+                if (nums.Contains(target))
+                {
+                    return index_loc = nums.ToList().IndexOf(target);
+                }
+
+                //case 2 - when the target variable is higher than max value in the array
+                else if (target > nums.Max()) { return nums.Length; }
+
+                //case 3 - when the target variable is lower than the lowest value in the array
+                else if (target < nums.Min()) { return 0; }
+
+                //case 4 - finding index of the target variable using binary seacrh algorithm
+                else if (target > nums[mid])
+                {
+
+                    while (target > nums[mid])
+                    {
+                        low = mid + 1;
+                        mid = (high + low) / 2;
+                        if (nums[mid] >= target)
+                        {
+                            mid--;
+                            break;
+                        }
+                        else mid++;
+                        break;
+                    }
+                }
+                else if (target < nums[mid])
+                {
+                    while (target < nums[mid])
+                    {
+                        high = mid - 1;
+                        mid = (high + low) / 2;
+                        if (nums[mid] <= target)
+                        {
+
+                            mid++;
+                            break;
+                        }
+                        else mid++;
+                        break;
+                    }
+                }
+                return mid;
+
+
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        //reflection - while developing the solution I got to know more arrays and indexes, I became more familier with index and arrays
 
         /*
          
@@ -163,17 +227,65 @@ namespace ISM6225_Assignment_2_Spring_2022
         {
             try
             {
-                
                 //write your code here.
 
-                return "";
+                //Removing special characters and lowering every char
+                paragraph = paragraph.ToLower().Replace("!", " ").Replace("?", " ").Replace("'", " ").Replace(",", " ").Replace(";", " ").Replace(".", " ").Trim();
+
+                //storing paragraph in a list
+                List<string> para_list = paragraph.Split(' ').ToList();
+
+                //using loop to remove banned words from the list
+                if (banned.Count() > 0)
+                {
+                    for (int i = 0; i < banned.Count(); i++)
+                    {
+                        para_list.RemoveAll(x => x == banned[i]);
+                    }
+                }
+
+                //declaring empty string
+                string word;
+
+                //declaring empty integer
+                int counter = 0;
+
+                //declaring empty dictionary
+                Dictionary<string, int> dict = new Dictionary<string, int>();
+
+                //using loop to measure frequency of each word
+                for (int i = 0; i < para_list.Count; i++)
+                {
+                    if (para_list[i].Length > 0)
+                    {
+                        word = para_list[i];
+
+                        if (dict.Keys.Contains(word))
+                        {
+                            //increasing frequency of existing words
+                            dict[word] = dict[word] + 1;
+                        }
+                        else
+                        {
+                            //adding words to dictionary
+                            dict.Add(word, 1);
+                        }
+                    }
+                }
+
+                //finding word with max frequecny
+                int index_max = dict.Values.ToList().FindIndex(x => x == dict.Values.ToList().Max());
+
+                //returing word from dictionary
+                return dict.Keys.ElementAt(index_max).ToString();
+
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
+        //reflection - the question involved lot of smaller steps, it gave good understanding of dictionary and lists, I felt its better to store strings in list and then work with them
 
         /*
         Question 3:
@@ -201,15 +313,54 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-                return 0;
+
+                //declaring empty dictionary
+                Dictionary<int, int> dict = new Dictionary<int, int>();
+
+                //storing length of array
+                int len = arr.Length;
+
+                //declaring empty variable
+                int val = 0;
+
+                //using loop to measure frequency of each element from array
+                for (int i = 0; i < len; i++)
+                {
+                    //similar to above problem, adding new element to dict and incrementing freq if element already exists
+                    val = arr[i];
+                    if (dict.Keys.Contains(val))
+                    {
+                        dict[val] = dict[val] + 1;
+                    }
+                    else
+                    {
+                        dict.Add(val, 1);
+                    }
+                }
+
+                //List to save lucky numbers
+                List<int> list_lucky = new List<int>();
+
+                //using loop to check if key and value are same for each pair from dictionary
+                for (int i = 0; i < dict.Count; i++)
+                {
+                    if (dict.Keys.ToList()[i] == dict.Values.ToList()[i])
+                        list_lucky.Add(dict.Keys.ToList()[i]);
+                }
+
+                //finding largest lucky number
+                if (list_lucky.Count > 0)
+                { return list_lucky.Max(); }
+
+                else return -1;
+
             }
             catch (Exception)
             {
-
                 throw;
             }
-
         }
+        //reflection - Question was good for practising dictionary add methods
 
         /*
         
@@ -225,7 +376,7 @@ namespace ISM6225_Assignment_2_Spring_2022
         Input: secret = "1807", guess = "7810"
         Output: "1A3B"
         Explanation: Bulls relate to a '|' and cows are underlined:
-        "1807"
+        "180 7"
           |
         "7810"
 
@@ -236,7 +387,51 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-                return "";
+
+                //storing length of secret string
+                int len = secret.Length;
+
+                //declaring empty variables
+                int i = 0;
+                int counter_a = 0;
+                int counter_b = 0;
+
+                //copying input strings into new strings
+                string new_secret = secret;
+                string new_guess = guess;
+
+                //using loop to compare each char with same index between the two strings
+                foreach (char c in guess)
+                {
+                    if (c == secret[i])
+                    {
+                        counter_a++;
+
+                        //removing matched char and adding blank space to keep length consistent
+                        new_secret = " " + new_secret.Remove(i, 1);
+                        new_guess = " " + new_guess.Remove(i, 1);
+                    }
+                    i++;
+                }
+
+                //removing spaces from last step
+                new_secret = new_secret.Replace(" ", "");
+                new_guess = new_guess.Replace(" ", "");
+
+                //using loop and checking if guess and secret have any common chars
+                foreach (char d in new_guess)
+                {
+                    if (new_secret.Contains(d))
+                    {
+                        //if char if found then it is removed 
+                        new_secret = new_secret.Remove(new_secret.IndexOf(d), 1);
+                        counter_b++;
+                    }
+
+                };
+
+                //returing results in requested format
+                return counter_a + "A" + counter_b + "B";
             }
             catch (Exception)
             {
@@ -244,7 +439,7 @@ namespace ISM6225_Assignment_2_Spring_2022
                 throw;
             }
         }
-
+        //reflection - question was very tricky, faced lot issue when guess string had duplicate values, tried Replace method but string lenght was decreasing finally tried Remove method to remove matched char and added empty space 
 
         /*
         Question 5:
@@ -266,14 +461,84 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-                
-                return new List<int>() {} ;
+
+                //declaring empty variables
+                int lastindex = 0;
+                int new_last_index = 0;
+                int firstindex = 0;
+                int dist = 0;
+                string word = "";
+                char c;
+
+                //declaring empty lists
+                List<string> labels = new List<string>();
+                List<string> words = new List<string>();
+
+                //using while loop till string is not empty
+                while (s.Length > 0)
+                {
+                    //storing 1st char from string
+                    c = s[0];
+
+                    //storing index of first occurance
+                    firstindex = s.IndexOf(c);
+
+                    //storing index of last occurance
+                    lastindex = s.LastIndexOf(c);
+
+                    //storing distance between 1st & last occurance of each char
+                    dist = lastindex - firstindex;
+
+                    //using substring to make 1st word from 1st & last occurance
+                    word = s.Substring(firstindex, lastindex + 1 - firstindex);
+
+                    //delacting empty char
+                    char d;
+
+                    //using for loop to on newly extracted word from inut string
+                    for (int p = 0; p < word.Length; p++)
+                    {
+                        d = word[p];
+
+                        //storing last indext of each char from the word
+                        new_last_index = s.LastIndexOf(d);
+
+                        //comparing last index of new char from earlier last index
+                        if (new_last_index > lastindex)
+                        {
+                            //using substring to extend the word using new last index
+                            word = s.Substring(firstindex, new_last_index + 1);
+
+                            //overwriting variable with new last index
+                            lastindex = word.LastIndexOf(d);
+                        }
+
+                    }
+
+                    //removing words from input string
+                    s = s.Remove(firstindex, lastindex + 1);
+
+                    //adding new words to list
+                    labels.Add(word);
+                }
+
+                //declaring empty list
+                List<int> f_res = new List<int>();
+
+                //using for loop to calculate length of each word
+                for (int i = 0; i < labels.Count; i++)
+                {
+                    //storing length in list
+                    f_res.Add(labels[i].Length);
+                }
+                return f_res;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        //reflection - question was difficut to solve, tried foreach loop but it did not work as expected, it is not flexible. Replaced foreach loop with while and for loop. Got to know shortcomings of foreach loop
 
         /*
         Question 6
@@ -306,13 +571,55 @@ namespace ISM6225_Assignment_2_Spring_2022
 
          */
 
-        public static List<int> NumberOfLines(int[] widths,string s)
+        public static List<int> NumberOfLines(int[] widths, string bulls_String9)
         {
             try
             {
                 //write your code here.
 
-                return new List<int>() { };
+                //storing alphabets in variable
+                string alpha = "abcdefghijklmnopqrstuvwxyz";
+
+                //storing length of input string
+                int len = bulls_String9.Length;
+
+                //dec;aring empty variables
+                int sum = 0;
+                int i = 0;
+                int counter = 0;
+                int result = 0;
+                int index = 0;
+
+                //using while loop
+                while (i < len)
+                {
+                    //using while loop till sum is less than 100
+                    while ((sum + widths[alpha.ToList().IndexOf(bulls_String9.ToList()[i])]) <= 100)
+                    {
+                        //storing index of input string
+                        index = alpha.ToList().IndexOf(bulls_String9.ToList()[i]);
+
+                        //adding value from array based on index
+                        sum = sum + widths[index];
+
+                        //incrementing variable
+                        i++;
+
+                        //breaking loop when string ends
+                        if (i == len) break;
+                    }
+
+                    //incrementing variable
+                    counter++;
+
+                    //storing sum into different variable for final result
+                    result = sum;
+
+                    //clearing sum variable for new iteration
+                    sum = 0;
+                }
+
+                return new List<int>() { counter, result };
             }
             catch (Exception)
             {
@@ -320,7 +627,7 @@ namespace ISM6225_Assignment_2_Spring_2022
             }
 
         }
-
+        //reflection - question was trickier to understand, tried few times with wrong understanding and  got wrong answers then tried again from scratch and solved it
 
         /*
         
@@ -349,18 +656,50 @@ namespace ISM6225_Assignment_2_Spring_2022
         {
             try
             {
-                //write your code here.
+                //storing 3 types of brackets
+                List<string> match = new List<string> { "{}", "[]", "()" };
 
-                return false;
+                //declaring empty variables
+                int index = 0;
+
+                while (bulls_string10.Length > 0)
+                {
+                    //checking for 1st type of brackets
+                    if (bulls_string10.Contains(match[0]))
+                    {
+                        //if it exists then removing it
+                        index = bulls_string10.IndexOf(match[0]);
+                        bulls_string10 = bulls_string10.Remove(index, 2);
+                    }
+
+                    //checking for 2nd type bracket
+                    else if (bulls_string10.Contains(match[1]))
+                    {
+                        //if it exists then removing it
+                        index = bulls_string10.IndexOf(match[1]);
+                        bulls_string10 = bulls_string10.Remove(index, 2);
+                    }
+
+                    //checking for 3nd type bracket
+                    else if (bulls_string10.Contains(match[2]))
+                    {
+                        //if it exists then removing it
+                        index = bulls_string10.IndexOf(match[2]);
+                        bulls_string10 = bulls_string10.Remove(index, 2);
+                    }
+
+                    //when length is not zero after removing all 3 types of brackets
+                    else return false;
+                }
+                return true;
+
             }
             catch (Exception)
             {
                 throw;
             }
-
-
         }
-
+        //reflection - tried few solutions before coming to this solution, other solutions were failing at few other cases 
 
 
         /*
@@ -394,7 +733,54 @@ namespace ISM6225_Assignment_2_Spring_2022
             {
                 //write your code here.
 
-                return 0;
+                //storing all morse codes as per order
+                string[] morse = new string[] { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
+
+                //storing engish alphabets
+                string alpha = "abcdefghijklmnopqrstuvwxyz";
+
+                //declaring empty variables
+                string s = "";
+                int index = 0;
+                string mcode = "";
+                int i = 0;
+                int j = 0;
+
+                //dclaring empty list
+                List<string> mlist = new List<string>();
+
+                while (i < words.Length)
+                {
+                    //storing 1st char from input string
+                    s = words[i];
+
+                    j = 0;
+                    while (j < s.Length)
+                    {
+                        //finding index of char
+                        index = alpha.IndexOf(s[j]);
+
+                        //finding morse code corresponding char
+                        mcode = mcode.ToString() + morse[index].ToString();
+
+                        //incrementing variable
+                        j++;
+                    }
+
+                    //storing loop count
+                    i++;
+
+                    //adding word to the list
+                    mlist.Add(mcode);
+
+                    //clearing word varible
+                    mcode = "";
+
+                }
+
+                //returing count of distinct words
+                return mlist.Distinct().Count();
+
             }
             catch (Exception)
             {
@@ -402,9 +788,7 @@ namespace ISM6225_Assignment_2_Spring_2022
             }
 
         }
-
-      
-
+        //reflection - question was easy to solve, did not involve lot of steps and did not use any complicated methods
 
         /*
         
@@ -426,6 +810,23 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
+                int start = grid[0, 0];
+
+                List<int> neighbours = new List<int>();
+
+                int[,] grid_new;
+
+
+
+                for (int i = 1; i < grid.Length; i++)
+
+                {
+                    //neighbours.Add(grid[i, 0]);
+                    //neighbours.Add(grid[0,i]);
+
+
+                }
+                Console.WriteLine();
                 return 0;
             }
             catch (Exception)
@@ -460,9 +861,45 @@ namespace ISM6225_Assignment_2_Spring_2022
         {
             try
             {
-                //write your code here.
-                return 0;
+                string new_word2 = "";
+                int len = 0;
+                int counter = 0;
+                int i = 0;
+                if (word1.Length == word2.Length)
+                {
+                    foreach (char c in word2)
+                    {
+                        if (word1.Contains(c))
+                        {
+                            new_word2 = new_word2 + c.ToString();
+                        }
+                    }
+                    len = word2.Length - new_word2.Length;
+                    if (len == 0)
+                    {
+                        counter = word1.Length - new_word2.Length;
+                        foreach (char c in new_word2)
+                        {
+                            if (c != word2[i])
+                            {
+                                counter++;
+                            }
+                        }
+                    }
+                    else if (len > 0)
+                    {
 
+                    }
+                }
+                else if (word1.Length > word2.Length)
+                {
+
+                }
+                else if (word1.Length < word2.Length)
+                {
+
+                }
+                return 0;
             }
             catch (Exception)
             {
