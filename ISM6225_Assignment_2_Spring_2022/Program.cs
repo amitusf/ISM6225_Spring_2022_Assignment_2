@@ -140,9 +140,8 @@ namespace ISM6225_Assignment_2_Spring_2022
                 int index_loc;
 
                 //declaring variable to length of the array
-                int high = nums.Length - 1;
-
-
+                int high = nums.Length-1;
+                 
                 //declaring variable to store lowest value of the array
                 int low = 0;
 
@@ -164,34 +163,21 @@ namespace ISM6225_Assignment_2_Spring_2022
                 //case 4 - finding index of the target variable using binary seacrh algorithm
                 else if (target > nums[mid])
                 {
-
                     while (target > nums[mid])
                     {
-                        low = mid + 1;
+                        low = mid+1;
                         mid = (high + low) / 2;
-                        if (nums[mid] >= target)
-                        {
-                            mid--;
-                            break;
-                        }
-                        else mid++;
-                        break;
+                        if (nums[mid] < target) { mid++; break; }
                     }
+
                 }
                 else if (target < nums[mid])
                 {
                     while (target < nums[mid])
                     {
-                        high = mid - 1;
+                        high = mid-1;
                         mid = (high + low) / 2;
-                        if (nums[mid] <= target)
-                        {
-
-                            mid++;
-                            break;
-                        }
-                        else mid++;
-                        break;
+                        if (nums[mid] > target) { mid++; break; }
                     }
                 }
                 return mid;
@@ -861,45 +847,30 @@ namespace ISM6225_Assignment_2_Spring_2022
         {
             try
             {
-                string new_word2 = "";
-                int len = 0;
                 int counter = 0;
-                int i = 0;
-                if (word1.Length == word2.Length)
+                int index = 0;
+
+                Console.WriteLine(word1.CompareTo(word2));
+
+                for (int i = 0; i < word1.Length; i++)
                 {
-                    foreach (char c in word2)
+                    if (word2.Contains(word1[i]))
                     {
-                        if (word1.Contains(c))
+                        index = word2.IndexOf(word1[i]);
+                        if(index != word1.IndexOf(word1[i]))
                         {
-                            new_word2 = new_word2 + c.ToString();
+                            counter++;
                         }
                     }
-                    len = word2.Length - new_word2.Length;
-                    if (len == 0)
+                    else
                     {
-                        counter = word1.Length - new_word2.Length;
-                        foreach (char c in new_word2)
-                        {
-                            if (c != word2[i])
-                            {
-                                counter++;
-                            }
-                        }
+                        counter++;
+                        word1 = word1.Remove(i, 1);
+                        //Console.WriteLine(word1);
                     }
-                    else if (len > 0)
-                    {
-
-                    }
+                    
                 }
-                else if (word1.Length > word2.Length)
-                {
-
-                }
-                else if (word1.Length < word2.Length)
-                {
-
-                }
-                return 0;
+                return counter;
             }
             catch (Exception)
             {
