@@ -161,26 +161,21 @@ namespace ISM6225_Assignment_2_Spring_2022
                 else if (target < nums.Min()) { return 0; }
 
                 //case 4 - finding index of the target variable using binary seacrh algorithm
-                else if (target > nums[mid])
+                while(high-low>1)
                 {
-                    while (target > nums[mid])
-                    {
-                        low = mid+1;
-                        mid = (high + low) / 2;
-                        if (nums[mid] < target) { mid++; break; }
-                    }
+                    //calculating mid in every iteration
+                    mid = (high + low) / 2;
 
-                }
-                else if (target < nums[mid])
-                {
-                    while (target < nums[mid])
+                    //when target is above middle index 
+                    if (nums[mid] < target)
                     {
-                        high = mid-1;
-                        mid = (high + low) / 2;
-                        if (nums[mid] > target) { mid++; break; }
+                        //moving low to middle
+                        low = mid;
                     }
+                    //otherwise moving high to middle
+                    else high = mid;
                 }
-                return mid;
+                return high;
 
 
             }
